@@ -1,0 +1,34 @@
+div#wrapper {
+    border: 1px solid red;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 75%;
+    height: 82.5%;
+}
+
+body{
+    background-color: #b2e9e4;
+}
+
+div#controlBlock {
+    border: 1px solid blue;
+    position: relative;
+    top: 5px;
+}
+
+
+svg.graph {
+    width: 500px;
+    height: 110px;
+}
+
+svg.graph .grid {
+    stroke: white;
+    stroke-dasharray: 1 2;
+    strok-width: 1;
+}
+
