@@ -1,66 +1,82 @@
+<!DOCTYPE html>
+
+<!-- TODO: random size box, changes colour when clicked
+            Quantity and Speed scales have dynamic values -->
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Bouncing</title>
+        <title>Gas Simulation</title>
         <link rel="stylesheet" type="text/css" href="./bp_style.css">
     </head>
     <body >
+        <div id="sidenav">
+            <p>Home</p>
+            <p>Games</p>
+            <p>Other</p>
+        </div>
+
         <div id="wrapper">
+            <div id="header">
+                <h1 id="simulation_name">Perfect Gas Simulation</h1>
+            </div>
+
             <div id="canvasBlock">
-                <canvas id="backgroundCanvas" width="1000" height="500" style="border:1px solid #000000;">No Canvas Support</canvas>
+                <canvas id="backgroundCanvas">No Canvas Support</canvas>
             </div>
 
             <script  type="text/javascript" src="./scripts/main.js"></script>
             
             <div id="controlBlock">
                 <!-- slider and input with button to set number of balls. -->
-                <input type="range" id="amountSlider" value="20" min="0" max="40" oninput="amountText.value = amountSlider.value">
-                <input type="text" id="amountText" placeholder="#Circle: 0-40" min="0" max="40" size="9" oninput="amountSlider.value = controllerModule.checkBound(this.id)">
+                <label id="quantityLabel" for="amountSlider">Quantity Scale</label>
+                <input type="range" class="range" id="amountSlider" value="200" min="0" max="300" oninput="amountText.value = amountSlider.value">
+                <input type="text" id="amountText" placeholder="#Circle: 0-300" min="0" max="300" size="20px" oninput="amountSlider.value = controllerModule.checkBound(this.id)">
                 <button id="render_button" value="submit" onClick="containerModule.setCircleNum(amountText.value);"> ENT </button>
 
-                <!-- slider with added energy to system -->
-                <!-- TODO: change to number instead of input textbos -->
-                <!-- TODO: allow slider to be more precise -->
-                <!-- TODO: connect with a javascript function to change speed -->
-                <input type="range" id="speedSlider" value="0" min="-10" max="10" oninput="speedText.value = speedSlider.value; containerModule.changeSpeed(speedSlider.value);">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                <label id="speedLabel" for="speedSlider">Speed Scale</label>    
+                <input type="range" class="range" id="speedSlider" value="0" min="-10" max="10" oninput="speedText.value = speedSlider.value; containerModule.changeSpeed(speedSlider.value);">
                 <output name="speedText" id="speedText" >0</output>
 
                 <!-- input with button to set energy for state -->
+                <!--
                 <input type="range" id="liquidStateSpeed" value="5" min="0" max="30" oninput="do change func">liquid speed state: 10
                 <input type="range" id="gasStateSpeed" value="10" min="0" max="30" oninput="do change func">gas speed state: 20
-
-
+                -->
             </div>
 
             <div id="figureBlock">
                 <figure>
-                    <figcaption>A graph</figcaption>
+                    <figcaption>A Graph of Particle Speeds</figcaption>
                     <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" class="graph" xmls:xlink="http://www.w3.org/1999/xlink" aria-labelledby="title" role="img">
                         <title id="title">graph with info</title>
                         <!-- number is from top and left -->
                     <g class="grid x-grid" id="xGrid">
-                        <line x1="50" x2="50" y1="10" y2="90"></line>
-                        <line x1="200" x2="200" y1="10" y2="90"></line>
-                        <line x1="350" x2="350" y1="10" y2="90"></line>
-                        <line x1="500" x2="500" y1="10" y2="90"></line> 
+                        <line x1="100" x2="100" y1="10" y2="90"></line>
+                        <line x1="250" x2="250" y1="10" y2="90"></line>
+                        <line x1="400" x2="400" y1="10" y2="90"></line>
+                        <line x1="550" x2="550" y1="10" y2="90"></line> 
                     </g>
                     <g class="grid y-grid" id="yGrid">
-                        <line x1="50" x2="500" y1="10" y2="10"></line>
-                        <line x1="50" x2="500" y1="30" y2="30"></line>
-                        <line x1="50" x2="500" y1="50" y2="50"></line>
-                        <line x1="50" x2="500" y1="70" y2="70"></line>
-                        <line x1="50" x2="500" y1="90" y2="90"></line>
+                        <line x1="100" x2="500" y1="10" y2="10"></line>
+                        <line x1="100" x2="500" y1="30" y2="30"></line>
+                        <line x1="100" x2="500" y1="50" y2="50"></line>
+                        <line x1="100" x2="500" y1="70" y2="70"></line>
+                        <line x1="100" x2="500" y1="90" y2="90"></line>
                     </g>
                     <g class="labels x-labels">
-                        <text x="40" y="105">0</text>
-                        <text x="190" y="105">10</text>
-                        <text x="340" y="105">20</text>
-                        <text x="480" y="105">30</text>
+                        <text x="90" y="105">0</text>
+                        <text x="240" y="105">10</text>
+                        <text x="390" y="105">20</text>
+                        <text x="530" y="105">30</text>
+                        <text x="250" y="125">Speed</text>
                     </g>
                     <g class="labels y-labels">
-                        <text x="27" y="16">40</text>
-                        <text x="27" y="36">30</text>
-                        <text x="27" y="56">20</text>
-                        <text x="27" y="76">10</text>
+                        <text x="77" y="16">40</text>
+                        <text x="77" y="36">30</text>
+                        <text x="77" y="56">20</text>
+                        <text x="77" y="76">10</text>
+                        <text x="0" y="55">Quantity</text>
                     </g>
 
                     <polyline
@@ -75,6 +91,8 @@
 
 
             </div>
+
+            <p style="font-size:70%;">This simulation was written in Javescript/Canvas. Made by Richard Zhang, 2016</p>
         </div>
     </body>
 </html>

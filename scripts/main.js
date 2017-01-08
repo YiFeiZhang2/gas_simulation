@@ -1,15 +1,7 @@
 //import { createC } from '.\helper\lib_create.js';
 
 //Bugs:
-//balls can get stuck to each other if they are going realy fast
-//solved: if direction is away from each other, then dont change 
-//Is overall speed increasing??
-//solved: fixed
 //calc_collision velocity doesn't work if one of the velocity is 0
-//
-//Created on same place?
-//solved: check to see if within anoter ball, if it is, try again
-//
 //
 //Issues:
 //Submitting form refreshes page.... why??
@@ -77,7 +69,7 @@ var containerModule = (function(controllerModule, canvas) {
         this.name = name;
         this.ctx = canvas.getContext('2d');
         this.colour = "rgb(255, 77, 77)";
-        this.rad = 15;//Math.random()*10 + 10;
+        this.rad = 10;//Math.random()*10 + 10;
         this.posx = Math.random()*(canvas.width - this.rad*2) + this.rad;
         this.posy = Math.random()*(canvas.height - this.rad*2) + this.rad;
         this.velx = Math.random()*20 - 10;
@@ -430,7 +422,7 @@ var graphModule = (function(containerModule, canvas) {
             }
 
             var point = svg.createSVGPoint();
-            point.x = 15*i + 50;
+            point.x = 15*i + 100;
             point.y = 90 - 2*graph_arr[i];
 
             polyline.points.appendItem(point);
