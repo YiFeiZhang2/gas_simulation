@@ -20,8 +20,8 @@
 
 
 var canvas = document.getElementById("backgroundCanvas");
-canvas.width = window.innerWidth * 0.75;
-canvas.height = window.innerHeight * 0.75;
+canvas.width = 500;
+canvas.height = 500;
 
 //document.write(canvas.height);
 //document.write(canvas.width);
