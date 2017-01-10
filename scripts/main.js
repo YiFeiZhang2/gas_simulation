@@ -1,27 +1,24 @@
 //import { createC } from '.\helper\lib_create.js';
 
 //Bugs:
-//calc_collision velocity doesn't work if one of the velocity is 0
+//Safari keeps track of last graph
 //
 //Issues:
 //Submitting form refreshes page.... why??
 //
 //ToDo:
-//**DONE: Condense the create circle code - it's used twice:
-//When click inputbox, remove all things in it.
 //Input energy for different states
 //Change ball colour when enough energy (speed)
-//somehow get a graph of the ball colours?? (prob need google)
-//input slider for added energy of system
 //Separate collision math into own Module: collision module //for the phyics
 //Create module for analysis of balls (energy, bonds, etc): analysisModule -> for the analysis
 //
+//checkbox for random size
 
 
 
 var canvas = document.getElementById("backgroundCanvas");
-canvas.width = 500;
-canvas.height = 500;
+canvas.width = window.innerWidth*0.70;
+canvas.height = window.innerHeight*0.70;
 
 //document.write(canvas.height);
 //document.write(canvas.width);
