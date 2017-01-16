@@ -3,9 +3,6 @@
 //Bugs:
 //Safari keeps track of last graph
 //
-//Issues:
-//Submitting form refreshes page.... why??
-//
 //ToDo:
 //Input energy for different states
 //Change ball colour when enough energy (speed)
@@ -226,6 +223,32 @@ var containerModule = (function(controllerModule, canvas) {
         }
     }
 
+    function calc_ave_vel(){
+        var total_vel = 0;
+        for (var i = 0; i < circle_arr.length; i++){
+            total_vel += Math.sqrt(Math.pow(circle_arr[i].velx, 2) + Math.pow(circle_arr[i].vely, 2));
+        }
+        return Math.round(total_vel*100/circle_arr.length)/100;
+    }
+
+    function calc_ave_ene(){
+        var total_energy = 0;
+        for (var i = 0; i < circle_arr.length; i++){
+            total_energy += (1/2) * Math.pow(Math.sqrt(Math.pow(circle_arr[i].velx, 2) + Math.pow(circle_arr[i].vely, 2)), 2) * Math.PI * Math.pow(circle_arr[i].rad, 2);
+        }
+        return Math.round(100*total_energy/circle_arr.length)/100;
+    }
+
+    function draw_ave(ctx){
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "20px Georgia";
+        ctx.fillText("Average particle speed: " + String(calc_ave_vel()), 15, 25);
+        ctx.fillText("* 30 px/sec", 270, 25);
+        ctx.fillText("Average particle energy: " + String(calc_ave_ene()), 15, 45);
+        ctx.fillText("* g(30 px/sec)^2", 320, 45);
+        return;
+    }
+
     function draw_frame( context, canvas){
         context.fillStyle = "#000000";
         context.fillRect(0, 0, canvas.width, canvas.height);
@@ -236,6 +259,7 @@ var containerModule = (function(controllerModule, canvas) {
             draw_circ(circle_arr[i]);
             move_circ(circle_arr[i]);
         }
+        draw_ave(context);
     }
 
     function setNumCircle( input_number ){
@@ -396,6 +420,9 @@ var graphModule = (function(containerModule, canvas) {
     function getVelArr(circle_arr){
         var max_vel = Math.round(containerModule.getMaxVel());
         var graph_arr = Array.apply(null, Array(max_vel + 1)).map(Number.prototype.valueOf, 0);
+        for (i = 0; i < max_vel + 1; i++){
+            graph_arr.push(0);
+        }
 
         for(var i = 0; i < circle_arr.length; i++){
             var ind = Math.round(Math.sqrt(Math.pow(circle_arr[i].velx, 2) + Math.pow(circle_arr[i].vely, 2)));
