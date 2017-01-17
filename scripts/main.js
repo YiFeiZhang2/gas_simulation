@@ -51,17 +51,55 @@ var containerModule = (function(controllerModule, canvas) {
     var circle_arr = []; //array of type circles
 
     var container = {
-        minx: 0,
-        miny: 0, 
-        maxx: canvas.width,
-        maxy: canvas.height,
+        minx: 1,
+        miny: 1, 
+        w: canvas.width,
+        h: canvas.height,
         vel: 0,
+        col: "rgba(134, 30, 252, 1)",
+        dragTL: false,
+        dragTR: false,
+        dragBL: false,
+        dragBR: false,
     };
+
+    function draw_container(container, ctx){
+        ctx.save();
+        ctx.beginPath();
+        ctx.strokeStyle = container.col;
+        ctx.lineWidth = "10";
+        ctx.rect(container.minx, container.miny, container.w, container.h);
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.fillStyle = container.col;
+        ctx.beginPath()
+        ctx.arc(container.minx, container.miny, 10, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.fillStyle = container.col;
+        ctx.beginPath()
+        ctx.arc(container.minx, container.miny + container.h, 10, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.fillStyle = container.col;
+        ctx.beginPath()
+        ctx.arc(container.minx + container.w, container.miny, 10, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.fillStyle = container.col;
+        ctx.beginPath()
+        ctx.arc(container.minx + container.w, container.miny + container.h, 10, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+    }
     
     //private constructor to create Circle
     function Circle(name, canvas) {
         this.name = name;
-        this.ctx = canvas.getContext('2d');
         this.colour = "rgb(255, 77, 77)";
         this.rad = 10;//Math.random()*10 + 10;
         this.posx = Math.random()*(canvas.width - this.rad*2) + this.rad;
@@ -70,7 +108,60 @@ var containerModule = (function(controllerModule, canvas) {
         this.vely = Math.random()*20 - 10;
         this.mass = Math.pow(this.rad, 2);
     }
+
+    function add_event_listener() {
+        canvas.addEventListener('mousedown', mouseDown, false);
+        canvas.addEventListener('mouseup', mouseUp, false);
+        canvas.addEventListener('mousemove', mouseMove, false);
+    }
+
+    function mouseDown(e) {
+        var mouseX = e.pageX - this.offsetLeft;
+        var mouseY = e.pageY - this.offsetTop;
+
+        if (checkClose(mouseX, container.minx) && checkClose(mouseY, container.miny)){
+            container.dragTL = true;
+        } else if (checkClose(mouseX, container.w) && checkClose(mouseY, container.miny)){
+            container.dragTR = true;
+        } else if (checkClose(mouseX, container.minx) && checkClose(mouseY, container.h)){
+            container.dragBL = true;
+        } else if (checkClose(mouseX, container.w) && checkClose(mouseY, container.h)){
+            container.dragBR = true;
+        } else{
+        }
+    }
+
+    function mouseUp(e){
+        container.dragBL = container.dragBR = container.dragTL = container.dragTR = false;
+    }
+
+    function mouseMove(e){
+        var mouseX = e.pageX - this.offsetLeft;
+        var mouseY = e.pageY - this.offsetTop;
+
+        if (container.dragTL){
+            container.w += (container.minx - mouseX);
+            container.h += (container.miny - mouseY);
+            container.minx = mouseX;
+            container.miny = mouseY;
+        } else if (container.dragTR){
+            container.w = Math.abs(container.minx - mouseX);
+            container.h += container.miny - mouseY;
+            container.miny = mouseY;
+        } else if (container.dragBL){
+            container.w += container.minx - mouseX;
+            container.h = Math.abs(container.miny - mouseY);
+            container.minx = mouseX;
+        } else if (container.dragBR){
+            container.w = Math.abs(container.minx - mouseX);
+            container.h = Math.abs(container.miny - mouseY);   
+        }
+    }
     
+    function checkClose(p1, p2){
+        return Math.abs(p1 - p2)<100; //10 being close enough
+    }
+
     function print_container(){
         for (i = 0; i < circle_arr.length; i++) {
             document.write(circle_arr[i]);
@@ -168,15 +259,15 @@ var containerModule = (function(controllerModule, canvas) {
         if (container.minx + cir.rad >= cir.posx){
             cir.posx = container.minx + cir.rad;
             col_loc.con_left = true;
-        } else if (container.maxx - cir.rad <= cir.posx){
-            cir.posx = container.maxx - cir.rad;
+        } else if ((container.minx + container.w) - cir.rad <= cir.posx){
+            cir.posx = (container.minx + container.w) - cir.rad;
             col_loc.con_right = true;
         }
         if (container.miny + cir.rad >= cir.posy){
             cir.posy = container.miny + cir.rad;
             col_loc.con_top = true;
-        } else if (container.maxy - cir.rad <= cir.posy){
-            cir.posy = container.maxy - cir.rad;
+        } else if ((container.miny + container.h) - cir.rad <= cir.posy){
+            cir.posy = (container.miny + container.h) - cir.rad;
             col_loc.con_bot = true;
         }
         return col_loc;
@@ -200,12 +291,12 @@ var containerModule = (function(controllerModule, canvas) {
     }
 
     //private function to draw a circle
-    function draw_circ(cir){
-        cir.ctx.beginPath();
-        cir.ctx.fillStyle = cir.colour;
-        cir.ctx.arc(cir.posx, cir.posy, cir.rad, 0, Math.PI * 2);
-        cir.ctx.fill();
-        cir.ctx.closePath();
+    function draw_circ(cir, ctx){
+        ctx.beginPath();
+        ctx.fillStyle = cir.colour;
+        ctx.arc(cir.posx, cir.posy, cir.rad, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
         return;
     }
 
@@ -240,26 +331,31 @@ var containerModule = (function(controllerModule, canvas) {
     }
 
     function draw_ave(ctx){
+        context.save();
         ctx.fillStyle = "#ffffff";
         ctx.font = "20px Georgia";
         ctx.fillText("Average particle speed: " + String(calc_ave_vel()), 15, 25);
         ctx.fillText("* 30 px/sec", 270, 25);
         ctx.fillText("Average particle energy: " + String(calc_ave_ene()), 15, 45);
         ctx.fillText("* g(30 px/sec)^2", 320, 45);
+        context.restore();
         return;
     }
 
     function draw_frame( context, canvas){
+        context.save();
         context.fillStyle = "#000000";
         context.fillRect(0, 0, canvas.width, canvas.height);
-
+        
         calc_all_vel();
 
         for (var i = 0; i < circle_arr.length; i++){
-            draw_circ(circle_arr[i]);
             move_circ(circle_arr[i]);
+            draw_circ(circle_arr[i], context);
         }
         draw_ave(context);
+        draw_container(container, context);
+        context.restore();
     }
 
     function setNumCircle( input_number ){
@@ -328,9 +424,10 @@ var containerModule = (function(controllerModule, canvas) {
     return {
         init: function( canvas, num_circles ){
 
-            if(canvas.getContext)
+            if(canvas.getContext) {
                 context = canvas.getContext('2d');
-            else return;
+                add_event_listener();
+            } else return;
 
             var timesRan = 0;
             var repeat = setInterval( function() {
@@ -465,18 +562,6 @@ var graphModule = (function(containerModule, canvas) {
 })(containerModule, canvas);
 
 window.onload = function(){
-
-/*
- *Tries to allow enter key to activate setCircleNum. Does not work rn
- *
-    var render_btn = document.getElementById("amountSlider");
-    render_btn.addEventListener("keydown", function (e) {
-        if (e.keyCode === 13) {
-            alert("hi");
-            containerModule.setCircleNum( document.getElementById("amountText").value );
-        }
-    });
-*/
     var num_circles = 200;
 
     for (var i = 0; i < num_circles; i++){
